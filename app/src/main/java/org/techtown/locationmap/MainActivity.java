@@ -15,7 +15,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.pedro.library.AutoPermissions;
 import com.pedro.library.AutoPermissionsListener;
 
@@ -27,10 +29,13 @@ public class MainActivity extends AppCompatActivity implements AutoPermissionsLi
     SupportMapFragment mapFragment;
     GoogleMap map;
 
+    MarkerOptions myLocationMarker;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -111,6 +116,22 @@ public class MainActivity extends AppCompatActivity implements AutoPermissionsLi
     private void showCurrentLocation(Double latitude, Double longitude) {
         LatLng curPoint = new LatLng(latitude, longitude);
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(curPoint, 15));
+
+        showMyLocationMarker(curPoint);
+    }
+
+    private void showMyLocationMarker(LatLng curPoint) {
+
+        if(myLocationMarker==null) {
+            myLocationMarker = new MarkerOptions();
+            myLocationMarker.position(curPoint);
+            myLocationMarker.title("내 위치\n");
+            myLocationMarker.icon(BitmapDescriptorFactory.fromResource(R.drawable.mylocation));
+            map.addMarker(myLocationMarker);
+        }else{
+            myLocationMarker.position(curPoint);
+
+        }
     }
 
     @Override
